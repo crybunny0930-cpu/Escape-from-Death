@@ -9,7 +9,10 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="description" content="Escape from Death — 좀비 사막을 탈출하는 카드 전투 로그라이크">
-<link rel="icon" href="data:,">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="manifest" href="manifest.json">
+<meta name="apple-mobile-web-app-title" content="Escape">
 <style>
 .title{--th:clamp(50px,10vh,90px);position:fixed;inset:0;margin:0;padding:0 14px var(--th);z-index:5;justify-content:center;gap:14px;overflow:hidden}
 .title .tcont{position:relative;z-index:3;display:flex;flex-direction:column;align-items:center;gap:16px}
@@ -5536,6 +5539,55 @@ try{permitTick()}catch(_){}
 try{paintSync()}catch(_){}
 try{const st=document.createElement("style");st.id="sqcorner";st.textContent=`button,kbd,.kk,.card,.card .cost,.box,.bagbox,.ov .bagbox,#tip,#kwtip,#zdt,.selinfo,.selcard,.pc,.party .pc,.rc,.nd,.stc,.cpanel,.slot,.rcard,.rcard.lk2 .rlko em,.chatp,#chdr .chatp,#chtab,.itcard,.iti,.rtag,.rtag button,.rcat button,#trdov,#trdov .ti,#trdov .tic,.mbox,.mm .mbox,.mbrow:not(.mm) .mbox,.contb,.mprog,.mprog i,.mn,.zch,.zc,#selpanel.cl2 .zg>div,#selpanel.cl2 .zc,#selpanel.cl2 .zkh em,.zg>div,.lgb,#hud.hudn,#hud .hp,#app.bt button,#app.bt kbd,#app.bt kbd.kk,#app.bt .lgb,#app.bt #fd,#app.bt .hpb,#app.bt .enb,#app.bt .en,#app.bt .hpb i,#app.bt .enb i,#app.bt .en i,#app.bt .card,#app.bt .card .cost,.hpb,.enb,.en,.evc,.evw,.ccw,.scp,.scc button,.scb button,.ccs,.encw,.ekc,.eca,.eop,.erq,.ewl span,.erz,.erl,.dgn,.ittot span,.cslot,.cslot .cuse,.mrc,.ccmy,.ccdf,.ccseg button,.sctg,.lkinfo,.hmap.dgmap,.dgm,.codq,.ctg,.ctp,.ctd,.cbf,.cbi,.kwarn,.tag,.rl2,.tgc,.crd,.crb,.crbv,.crbv.crr-enc,.rcard.crr::before,.cchip,.hbtn,.mt,.mtb,.seg,.seg button,.gbn,.pbar i,.pbar u,.pn,.pchip,.rclog span,.pcd,.dgc,.dgt,.sdp,.sdp i,.sdp u,.gsum,.rnw,.sdn,.dghd .dgtg,.epr .pb,.ccadb em,.lkinfo,.selcards .selcard,.bub,.zbub,#lpn .lp,#fxlab,.mcs .mc,.mcol,.rz,.shb,.eic,.cnt,.mi2 span,.cpg div,.cpp,.bc,.zb,.rlbd,#rcb,.ecd .rlbd,.scbx,.hres,.dtl>i,.surv,#zintb,.field>#zintb,.eico,.eico2,.eiln{border-radius:0!important}`;(document.body||document.documentElement).appendChild(st)}catch(_){}
 
+})();
+</script>
+<script id="dd-pwa">
+/* ===== PWA: 설치 + 새 버전 알림 =====
+ * 게임을 새로 올리면(index.html 교체) 접속 중인 사람에게 "새 버전이 있어요" 안내를 띄웁니다.
+ * 게임 진행 데이터(localStorage)는 건드리지 않습니다. */
+(function(){
+  "use strict";
+  if(!("serviceWorker" in navigator)||!/^https?:$/.test(location.protocol))return;
+  navigator.serviceWorker.register("sw.js").catch(function(){});
+
+  var base=null,shown=false;
+  async function digest(){
+    var r=await fetch(location.pathname.replace(/[^\/]*$/,"")+"index.html?v="+Date.now(),{cache:"no-store"});
+    if(!r.ok)throw 0;
+    var b=await r.arrayBuffer();
+    if(window.crypto&&crypto.subtle){
+      var h=new Uint8Array(await crypto.subtle.digest("SHA-1",b));
+      return Array.prototype.map.call(h,function(x){return("0"+x.toString(16)).slice(-2)}).join("");
+    }
+    return String(b.byteLength);
+  }
+  async function check(){
+    if(shown||!navigator.onLine)return;
+    try{
+      var d=await digest();
+      if(base===null){base=d;return}
+      if(d!==base)show();
+    }catch(_){}
+  }
+  function show(){
+    if(shown)return;shown=true;
+    var bar=document.createElement("div");
+    bar.setAttribute("role","status");
+    bar.style.cssText="position:fixed;left:50%;bottom:calc(14px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:2147483000;max-width:calc(100vw - 24px);display:flex;gap:10px;align-items:center;padding:10px 12px 10px 16px;background:#1b1410;color:#f1e6d4;border:1px solid #d9a53a;border-radius:10px;box-shadow:0 6px 24px rgba(0,0,0,.6);font:600 14px/1.3 -apple-system,BlinkMacSystemFont,'Malgun Gothic',sans-serif";
+    var t=document.createElement("span");t.textContent="새 버전이 있어요";
+    var go=document.createElement("button");go.textContent="업데이트";
+    go.style.cssText="cursor:pointer;padding:7px 14px;background:#d9a53a;color:#1b1410;border:0;border-radius:7px;font:800 14px sans-serif";
+    var no=document.createElement("button");no.textContent="나중에";
+    no.style.cssText="cursor:pointer;padding:7px 8px;background:transparent;color:#bfae96;border:0;font:600 13px sans-serif";
+    go.onclick=function(){location.reload()};
+    no.onclick=function(){bar.remove();setTimeout(function(){shown=false},30*60*1000)};
+    bar.appendChild(t);bar.appendChild(go);bar.appendChild(no);
+    document.body.appendChild(bar);
+  }
+  window.addEventListener("load",function(){setTimeout(check,3000)});
+  document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")check()});
+  setInterval(check,20*60*1000);
+  window.__ddCheckUpdate=check; // 테스트용
 })();
 </script>
 </body>
