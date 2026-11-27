@@ -7467,6 +7467,7 @@ DGN.lotus={t:"타오르는 결투장",ic:LTS,map:"plaza",rooms:[
  {k:"boss",t:"3층 · 최후의 대결",d:"로터스 (일대일)",boss:"lotus",mins:[],st:"lt3"},
  {k:"enc",t:"결말",d:"결말",enc:"lt9"}]};
 Object.assign(ENCSUM,{jk1:"잭 전용 신화 스토리 「불꽃과 광기」 1부. 화염 능력을 지닌 초인을 만난다. 비웃고 떠나면 악행 스택 +1.",jk2:"잭 전용 신화 스토리 2부. 고른 선택에 따라 악행 · 선행 스택이 쌓이고, 곧바로 미니 던전 「타오르는 결투장」(3층)에 들어간다. 로터스와의 일대일 결투 결과와 스택에 따라 결말이 네 갈래로 나뉜다."});
+try{SCGRP.own=SCGRP.own||[];SCGRP.own.push({n:"불꽃과 광기 (전체)",d:"잭 전용 신화 스토리. 「불꽃을 다루는 자」(1부)와 「정의로운 불꽃」(2부)을 한 번에 켜고 끕니다.",ids:["jk1","jk2"]})}catch(_){}
 // 인카운터 생성 · 조우 교환소 품목
 try{const it={k:"jk_lt",type:"enc",n:"불꽃과 광기",ic:"♨︎",enc:"jk1",ids:["jk1","jk2"],link:"잭",d:"잭 전용 신화 스토리 「불꽃을 다루는 자 → 정의로운 불꽃」이 탈출 중에 등장합니다(잭이 파티에 있어야 합니다). 이어서 미니 던전 「타오르는 결투장」(3층)에서 로터스와 일대일로 겨룹니다. 이기면 로터스를 살릴지 죽일지 고르고, 지면 악행 · 선행 스택으로 결말이 정해집니다. 신화 아이템 「로터스의 불씨」 · 「꺼진 정의의 휘장」, 신화 카드 「Προμηθεύς」."};
  const i=ECON.encItems.findIndex(x=>x.k=="jk_lt");if(i>=0)ECON.encItems[i]=it;else ECON.encItems.push(it);ECON.shop.enc.jk_lt=100}catch(e){console.error(e)}
